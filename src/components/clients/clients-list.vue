@@ -3,7 +3,7 @@
      <h1>Clients</h1>
     <v-data-table :headers="headers" :items="clientArray" hide-actions class="elevation-1">
       <template slot="items" slot-scope="props">
-        <td>{{ props.item.name }}</td>
+        <td @click="visitClient(props.item)">{{ props.item.name }}</td>
         <td>{{ props.item.description }}</td>
         <td class="table-row">
             {{ props.item.epics.length }}
@@ -72,7 +72,9 @@ export default {
     }
   },
   mounted () {
-    this.getClients()
+    this.$nextTick(() => {
+      this.getClients()
+    })
   },
   methods: {
     getClients () {

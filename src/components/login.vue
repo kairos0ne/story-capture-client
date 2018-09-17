@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-card max-width="600">
+        <v-card max-width="600" class="login-card">
             <v-card-title class="grey lighten-4 py-4 title">
               Login
             </v-card-title>
@@ -66,6 +66,7 @@ export default {
           this.$store.dispatch('setAuthToken', token)
           this.$store.dispatch('setUser', user)
           this.$store.dispatch('setAuth', token)
+          location.reload()
         })
         .catch(e => {
           this.errors.push(e)
@@ -84,4 +85,6 @@ export default {
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="sass">
+  .login-card
+    left: 25%
 </style>

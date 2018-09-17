@@ -12,7 +12,7 @@
           </v-card-title>
           <p class="cta-body">You'll need to create an account to start the process. </p>
           <v-card-actions>
-            <v-btn flat dark>Listen now</v-btn>
+            <v-btn @click="createAccount" flat dark>Create Account</v-btn>
           </v-card-actions>
         </v-card>
         <v-card  color="grey darken-2" class="white--text cta-card">
@@ -21,16 +21,16 @@
           </v-card-title>
           <p class="cta-body">Login to your account.</p>
           <v-card-actions>
-            <v-btn flat dark>Listen now</v-btn>
+            <v-btn @click="loginUser" flat dark>Login</v-btn>
           </v-card-actions>
         </v-card>
         <v-card  color="grey darken-2" class="white--text cta-card">
           <v-card-title primary-title>
             <div class="headline">Get Started.</div>
           </v-card-title>
-          <p class="cta-body">You'll need to create an account to start the process. </p>
+          <p class="cta-body">Create a new client to get started</p>
           <v-card-actions>
-            <v-btn flat dark>Listen now</v-btn>
+            <v-btn @click="createStory" flat dark>Capture</v-btn>
           </v-card-actions>
         </v-card>
       </v-container>
@@ -69,6 +69,15 @@ export default {
       } else {
         this.showLinks = false
       }
+    },
+    createAccount () {
+      this.$router.push('/register')
+    },
+    createStory () {
+      this.$router.push('/stories-create')
+    },
+    loginUser () {
+      this.$router.push('/login')
     }
   }
 }

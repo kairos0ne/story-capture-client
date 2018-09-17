@@ -20,6 +20,7 @@
                     </td>
                   </template>
               </v-data-table>
+              <v-btn><router-link class="remove-link-styles" to="/stories-create">Create Story</router-link></v-btn>
             </v-flex>
           </v-layout>
         </v-container>

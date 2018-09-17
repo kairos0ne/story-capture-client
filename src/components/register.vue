@@ -1,6 +1,6 @@
 <template>
   <v-container>
-      <v-card max-width="600">
+      <v-card max-width="600" class="register-card">
           <v-card-title class="grey lighten-4 py-4 title">
             Registar User
           </v-card-title>
@@ -83,4 +83,6 @@ export default {
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="sass">
+  .register-card
+    left: 25%
 </style>

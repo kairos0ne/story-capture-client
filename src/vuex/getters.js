@@ -7,3 +7,4 @@ export const getAuthToken = state => state.tokenHeader
 export const getUser = state => state.user
 export const getAuth = state => state.auth
 export const getCurrentClient = state => state.selectedClient
+export const getCurrentEpic = state => state.selectedEpic

@@ -16,3 +16,6 @@ export const logout = ({ commit }) => {
 export const setCurrentClient = ({ commit }, client) => {
   commit('SET_CURRENT_CLIENT', client)
 }
+export const setCurrentEpic = ({ commit }, epic) => {
+  commit('SET_CURRENT_EPIC', epic)
+}

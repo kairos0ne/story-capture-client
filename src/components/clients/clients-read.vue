@@ -23,6 +23,7 @@
                     </td>
                   </template>
                 </v-data-table>
+                <v-btn @click="createEpic()">Create Epic</v-btn>
               <div class="spacer"></div>
               <span class="subheading">Stories</span>
               <v-divider class="my-3"></v-divider>
@@ -39,7 +40,7 @@
                     </td>
                   </template>
                 </v-data-table>
-                <v-btn>Create Story</v-btn>
+                <v-btn><router-link class="remove-link-styles" to="/stories-create">Create Story</router-link></v-btn>
                 <v-btn @click="exportCSV()" :download="fileName">Export CSV</v-btn>
             </v-flex>
           </v-layout>
@@ -129,8 +130,10 @@ export default {
     }
   },
   mounted () {
-    this.getClient()
-    this.getEpics()
+    this.$nextTick(() => {
+      this.getClient()
+      this.getEpics()
+    })
   },
   computed: {
     user () {
@@ -151,7 +154,8 @@ export default {
     getEpics () {
       HTTP.get('/users/' + this.user.id + '/clients/' + this.$route.params.id + '/epics')
         .then(response => {
-          this.epics = response.data.epics
+          let epics = response.data.epics
+          this.epics = epics
         })
         .catch(e => {
           this.errors.push(e)
@@ -169,6 +173,9 @@ export default {
         .catch(e => {
           this.errors.push(e)
         })
+    },
+    createEpic () {
+      this.$router.push('/epics-create')
     }
   }
 }
@@ -176,4 +183,7 @@ export default {
 <style lang="sass">
 .spacer
   height: 30px
+.remove-link-styles
+  text-decoration: none
+  color: black
 </style>

@@ -4,7 +4,7 @@
       <!-- Start Navigation -->
         <v-navigation-drawer :clipped="$vuetify.breakpoint.lgAndUp" v-model="drawer" fixed app>
           <v-list dense>
-            <template v-if="showLinks" v-for="item in items">
+            <template v-if="showLinks" v-for="item in loggedInItems">
               <v-layout v-if="item.heading" :key="item.heading" row align-center>
                 <v-flex xs6>
                   <v-subheader v-if="item.heading">
@@ -28,13 +28,37 @@
                 </v-list-tile-content>
               </v-list-tile>
             </template>
+            <template v-if="!showLinks" v-for="item in loggedOutItems">
+                <v-layout v-if="item.heading" :key="item.heading" row align-center>
+                  <v-flex xs6>
+                    <v-subheader v-if="item.heading">
+                      {{ item.heading }}
+                    </v-subheader>
+                  </v-flex>
+                  <v-flex xs6 class="text-xs-center">
+                    <a href="#!" class="body-2 black--text">EDIT</a>
+                  </v-flex>
+                </v-layout>
+                <v-list-tile :key="item.text">
+                  <v-list-tile-action>
+                    <v-icon>{{ item.icon }}</v-icon>
+                  </v-list-tile-action>
+                  <v-list-tile-content>
+                    <v-list-tile-title>
+                      <router-link tag="li" :to=item.url>
+                        {{ item.text }}
+                      </router-link>
+                    </v-list-tile-title>
+                  </v-list-tile-content>
+                </v-list-tile>
+              </template>
           </v-list>
         </v-navigation-drawer>
         <!-- Start Menu Bar  -->
         <v-toolbar :clipped-left="$vuetify.breakpoint.lgAndUp" color="black" dark app fixed>
           <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
             <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-            <span class="hidden-sm-and-down">Story Capture</span>
+            <span class="hidden-sm-and-down"><router-link class="homepage-link" to="/">Story Capture</router-link></span>
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <div @click="logout(auth.token)" v-if="showLinks" class="log-out">Logout</div>
@@ -55,13 +79,13 @@
             <v-container grid-list-sm class="pa-4">
               <v-layout row wrap>
                 <v-flex xs12 align-center justify-space-between>
-                    <v-btn xs3 class="left">
+                    <v-btn @click="createClient" xs3 class="left">
                         Create Client
                     </v-btn>
-                    <v-btn xs3 class="left">
+                    <v-btn @click="createEpic" xs3 class="left">
                         Create Epic
                     </v-btn>
-                    <v-btn xs3 class="left">
+                    <v-btn @click="createStory" xs3 class="left">
                         Create Story
                     </v-btn>
                 </v-flex>
@@ -74,16 +98,23 @@
 </template>
 
 <script>
+import { HTTP } from '@/http-common.js'
+
 export default {
   data () {
     return {
       showLinks: false,
       dialog: false,
       drawer: false,
-      items: [
+      loggedInItems: [
         { icon: 'contacts', text: 'Clients', url: '/clients' },
         { icon: 'description', text: 'Epics', url: '/epics' },
         { icon: 'content_copy', text: 'Stories', url: '/stories' }
+      ],
+      loggedOutItems: [
+        { icon: 'folder', text: 'About', url: '/' },
+        { icon: 'portrait', text: 'Login', url: '/login' },
+        { icon: 'portrait', text: 'Register', url: '/register' }
       ]
     }
   },
@@ -108,7 +139,26 @@ export default {
     },
     logout (auth) {
       this.$store.dispatch('logout')
-      location.reload()
+      HTTP.delete('/logout')
+        .then(response => {
+          sessionStorage.setItem('Authorisation', null)
+          location.reload()
+        })
+        .catch(e => {
+          this.errors.push(e)
+        })
+    },
+    createClient () {
+      this.$router.push('/clients-create')
+      this.dialog = false
+    },
+    createEpic () {
+      this.$router.push('/epics-create')
+      this.dialog = false
+    },
+    createStory () {
+      this.$router.push('/stories-create')
+      this.dialog = false
     }
   }
 }
@@ -139,5 +189,9 @@ export default {
 }
 .log-out {
   margin-right: 20px;
+}
+.homepage-link {
+  text-decoration: none;
+  color:white;
 }
 </style>

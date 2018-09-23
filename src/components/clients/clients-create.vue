@@ -20,6 +20,12 @@
               <v-btn @click="createClient(user)" flat color="black">Create Client</v-btn>
              </v-card-actions>
           </v-card>
+          <v-snackbar v-model="snackbar" :bottom="y === 'bottom'" :left="x === 'left'" :multi-line="mode === 'multi-line'" :right="x === 'right'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+            {{ error }}
+            <v-btn color="white" flat @click="snackbar = false">
+              Close
+            </v-btn>
+          </v-snackbar>
     </v-container >
   </template>
 <script>
@@ -29,6 +35,12 @@ export default {
   name: 'login',
   data () {
     return {
+      snackbar: false,
+      y: 'top',
+      x: null,
+      mode: '',
+      timeout: 6000,
+      error: '',
       clientForm: {
         name: '',
         description: '',
@@ -58,12 +70,18 @@ export default {
       this.clientForm.user_id = this.user.id
       HTTP.post('/users/' + this.user.id + '/clients', this.clientForm)
         .then(response => {
-          console.log(response.data)
+          this.$store.dispatch('setCurrentClient', response.data.client)
+          this.$router.push('/clients')
         })
-        .catch(e => {
-          this.errors.push(e)
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          if (error.response.status === 422) {
+            this.error = 'Name of the client is required'
+          } else {
+            this.error = error.response.data.name
+          }
         })
-      this.$router.push('/clients')
     }
   }
 }

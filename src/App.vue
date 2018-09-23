@@ -77,17 +77,39 @@
               Select Operation
             </v-card-title>
             <v-container grid-list-sm class="pa-4">
-              <v-layout row wrap>
-                <v-flex xs12 align-center justify-space-between>
-                    <v-btn @click="createClient" xs3 class="left">
-                        Create Client
-                    </v-btn>
-                    <v-btn @click="createEpic" xs3 class="left">
-                        Create Epic
-                    </v-btn>
-                    <v-btn @click="createStory" xs3 class="left">
-                        Create Story
-                    </v-btn>
+              <v-layout row justify-space-between>
+                <v-flex xs4 align-center >
+                    <v-card color="grey darken-2 fab-card" class="white--text">
+                        <v-card-title primary-title>
+                          <div class="headline">Create a client</div>
+                          <div>Create a client so that you can create epics and stories against that client.</div>
+                        </v-card-title>
+                        <v-card-actions>
+                          <v-btn class="fab-card-button"  flat dark @click="createClient" >Create client</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                </v-flex>
+                <v-flex xs4 align-center >
+                    <v-card color="grey darken-2 fab-card" class="white--text">
+                        <v-card-title primary-title>
+                          <div class="headline">Create a epic</div>
+                          <div>Create a epic so that you can assign stories against that epic.</div>
+                        </v-card-title>
+                        <v-card-actions>
+                          <v-btn class="fab-card-button" flat dark @click="createEpic">Create Epic</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                </v-flex>
+                <v-flex xs4 align-center >
+                    <v-card color="grey darken-2 fab-card" class="white--text">
+                        <v-card-title primary-title>
+                          <div class="headline">Create a story</div>
+                          <div>Create stories for a given client and epic.</div>
+                        </v-card-title>
+                        <v-card-actions>
+                          <v-btn class="fab-card-button" flat dark @click="createStory">Create Story</v-btn>
+                        </v-card-actions>
+                      </v-card>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -143,6 +165,7 @@ export default {
         .then(response => {
           sessionStorage.setItem('Authorisation', null)
           location.reload()
+          this.$router.push('/')
         })
         .catch(e => {
           this.errors.push(e)
@@ -194,4 +217,11 @@ export default {
   text-decoration: none;
   color:white;
 }
+.fab-card {
+  min-height: 200px;
+}
+.v-content {
+  padding-top: 0px;
+}
+
 </style>

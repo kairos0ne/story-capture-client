@@ -17,7 +17,7 @@
               </v-layout>
             </v-container>
             <v-card-actions>
-              <v-btn @click="updateClient(user)" flat color="black">Create Client</v-btn>
+              <v-btn @click="updateClient(user)" flat color="black">Update Client</v-btn>
              </v-card-actions>
           </v-card>
     </v-container >
@@ -26,7 +26,7 @@
 import { HTTP } from '@/http-common.js'
 
 export default {
-  name: 'login',
+  name: 'client-update',
   data () {
     return {
       clientForm: {
@@ -44,6 +44,7 @@ export default {
   created () {
   },
   mounted () {
+    this.setData()
   },
   computed: {
     auth () {
@@ -67,6 +68,11 @@ export default {
           this.errors.push(e)
         })
       this.$router.push('/clients')
+    },
+    setData () {
+      this.clientForm.name = this.client.name
+      this.clientForm.description = this.client.description
+      this.clientForm.user_id = this.client.user.id
     }
   }
 }

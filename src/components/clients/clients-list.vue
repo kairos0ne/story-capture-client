@@ -9,17 +9,37 @@
             {{ props.item.epics.length }}
         </td>
         <td class="table-row">
+          {{ props.item.stories.length }}
+        </td>
+        <td class="table-row">
             <v-icon @click="visitClient(props.item)">pageview</v-icon>
         </td>
         <td class="table-row">
-            <v-icon>edit</v-icon>
+            <v-icon @click="editClient(props.item)">edit</v-icon>
         </td>
-        <td class="table-row">
+        <td @click="deleteConfirm(props.item)" class="table-row">
             <v-icon>delete</v-icon>
         </td>
       </template>
     </v-data-table>
     <v-btn @click="createClient(user)">Create Client</v-btn>
+    <v-dialog v-model="dialog" width="500">
+        <v-card>
+          <v-card-title class="headline grey lighten-2" primary-title>
+            Privacy Policy
+          </v-card-title>
+          <v-card-text>
+            This action will perminantly delte the Client and all Epics and Stories the Client has.
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" flat @click="deleteClient(SetDeleteClient)">
+              Delete
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
   </v-container>
 </template>
 <script>
@@ -28,6 +48,8 @@ import {HTTP} from '@/http-common.js'
 export default {
   data () {
     return {
+      dialog: false,
+      SetDeleteClient: {},
       clientArray: [],
       headers: [
         {
@@ -44,6 +66,11 @@ export default {
         },
         {
           text: 'Epics',
+          value: 'badge',
+          alight: 'left'
+        },
+        {
+          text: 'Stories',
           value: 'badge',
           alight: 'left'
         },
@@ -92,6 +119,24 @@ export default {
     },
     createClient (user) {
       this.$router.push('clients-create')
+    },
+    deleteConfirm (client) {
+      this.dialog = true
+      this.SetDeleteClient = client
+    },
+    deleteClient () {
+      HTTP.delete('/users/' + this.user.id + '/clients/' + this.SetDeleteClient.id)
+        .then(response => {
+          this.getClients()
+          this.dialog = false
+        })
+        .catch(e => {
+          this.errors.push(e)
+        })
+    },
+    editClient (client) {
+      this.$router.push('clients-update')
+      this.$store.dispatch('setCurrentClient', client)
     }
   }
 }

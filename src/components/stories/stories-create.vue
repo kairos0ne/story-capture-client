@@ -8,14 +8,20 @@
               <v-layout row wrap>
                 <v-flex xs12 align-center justify-space-between>
                     <v-form v-model="valid">
-                        <v-select :items="clients" item-text="name" item-value="id" input-value="epicForm.client_id"  @change="setClient" label="Client" required>
-                        </v-select>
-                        <v-select :items="epics" item-text="name" item-value="id" input-value="storyFrom.epic_id"  @change="setEpic" label="Epic" required>
-                            </v-select>
+                      <v-autocomplete v-model="autoClient" :hint="!isEditing ? 'Start typing the client name' : 'Click the icon to save'" :items="clients" item-text="name" item-value="id" label="Client" persistent-hint   @change="setClient">
+                        <v-slide-x-reverse-transition slot="append-outer" mode="out-in">
+                        </v-slide-x-reverse-transition>
+                      </v-autocomplete>
+                      <v-autocomplete v-model="autoEpic" :hint="!isEditing ? 'Start typing the epic name' : 'Click the icon to save'" :items="epics" item-text="name" item-value="id" label="Epic" persistent-hint  @change="setEpic">
+                          <v-slide-x-reverse-transition slot="append-outer" mode="out-in">
+                          </v-slide-x-reverse-transition>
+                        </v-autocomplete>
                         <v-text-field v-model="storyForm.task" :rules="taskRules" label="Story" required>
                         </v-text-field>
-                        <v-select :items="types"  @change="setType" label="Type" required>
-                            </v-select>
+                        <v-autocomplete v-model="autoType" :hint="!isEditing ? 'Start typing the type' : 'Click the icon to save'" :items="types" label="Type" persistent-hint  @change="setType">
+                            <v-slide-x-reverse-transition slot="append-outer" mode="out-in">
+                            </v-slide-x-reverse-transition>
+                          </v-autocomplete>
                         <v-text-field v-model="storyForm.points" label="Points">
                         </v-text-field>
                     </v-form>
@@ -32,19 +38,50 @@
               Select Operation
             </v-card-title>
             <v-container grid-list-sm class="pa-4">
-              <v-layout row wrap>
-                <v-flex xs12 align-center justify-space-between>
-                    <v-btn xs3 class="left" @click="clearForm()">
-                        Create another story
-                    </v-btn>
-                    <v-btn xs3 class="left" @click="gotoStory(storyCreated)">
-                        Vist story created
-                    </v-btn>
-                </v-flex>
+              <v-layout row align-center justify-space-between>
+                  <v-flex xs4>
+                    <v-card color="grey darken-2 fab-card" class="white--text">
+                        <v-card-title primary-title>
+                          <div class="headline">Create another story</div>
+                          <div>Create another story with your data pre-filled.</div>
+                        </v-card-title>
+                        <v-card-actions>
+                          <v-btn class="fab-card-button" flat dark @click="clearForm">Create Story</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                  </v-flex>
+                  <v-flex xs4>
+                    <v-card color="grey darken-2 fab-card" class="white--text">
+                        <v-card-title primary-title>
+                          <div class="headline">Create epic</div>
+                          <div>Create a new epic to log stories against.</div>
+                        </v-card-title>
+                        <v-card-actions>
+                          <v-btn class="fab-card-button" flat dark @click="createEpic">Create Epic</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                  </v-flex>
+                  <v-flex xs4>
+                    <v-card color="grey darken-2 fab-card" class="white--text">
+                        <v-card-title primary-title>
+                          <div class="headline">Create client</div>
+                          <div>Create a new client to log epics and stories against.</div>
+                        </v-card-title>
+                        <v-card-actions>
+                          <v-btn class="fab-card-button" flat dark @click="createClient">Create Client</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                  </v-flex>
               </v-layout>
             </v-container>
           </v-card>
         </v-dialog>
+        <v-snackbar v-model="snackbar" :bottom="y === 'bottom'" :left="x === 'left'" :multi-line="mode === 'multi-line'" :right="x === 'right'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+          {{ error }}
+          <v-btn color="white" flat @click="snackbar = false">
+            Close
+          </v-btn>
+        </v-snackbar>
     </v-container >
   </template>
 <script>
@@ -54,6 +91,16 @@ export default {
   name: 'CreateStory',
   data () {
     return {
+      snackbar: false,
+      y: 'top',
+      x: null,
+      mode: '',
+      timeout: 6000,
+      error: '',
+      autoClient: '',
+      autoEpic: '',
+      autoType: '',
+      isEditing: '',
       storyCreated: {},
       clients: [],
       epics: [],
@@ -94,6 +141,7 @@ export default {
   },
   mounted () {
     this.getClients()
+    this.checkClientSelected()
   },
   computed: {
     auth () {
@@ -114,8 +162,14 @@ export default {
           this.storyCreated = response.data.story
           this.dialog = true
         })
-        .catch(e => {
-          this.errors.push(e)
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          if (error.response.status === 422) {
+            this.error = 'Task, Client and Epic of the story is required'
+          } else {
+            this.error = error.response.data.name
+          }
         })
     },
     getClients () {
@@ -124,8 +178,10 @@ export default {
           let clients = response.data.clients
           this.clients = clients
         })
-        .catch(e => {
-          this.errors.push(e)
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          this.error = 'Cannot get clients'
         })
     },
     getEpics (item) {
@@ -134,8 +190,10 @@ export default {
           let epics = response.data.epics
           this.epics = epics
         })
-        .catch(e => {
-          this.errors.push(e)
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          this.error = 'Cannot get epics'
         })
     },
     setClient (item) {
@@ -151,13 +209,25 @@ export default {
     },
     clearForm () {
       this.storyForm.task = ''
-      this.storyForm.story_type = ''
       this.storyForm.points = null
       this.dialog = false
     },
     setType (item) {
       console.log(item)
       this.storyForm.story_type = item
+    },
+    gotoClients  () {
+      this.$router.push('/clients')
+    },
+    createClient () {
+      this.$router.push('/clients-create')
+    },
+    createEpic () {
+      this.$router.push('/epics-create')
+    },
+    checkClientSelected () {
+      if (this.client) {
+      }
     }
   }
 }

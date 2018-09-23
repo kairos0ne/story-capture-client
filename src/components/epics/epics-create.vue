@@ -8,8 +8,10 @@
               <v-layout row wrap>
                 <v-flex xs12 align-center justify-space-between>
                     <v-form v-model="valid">
-                        <v-select :items="clients" item-text="name" item-value="id" input-value="epicForm.client_id"  @change="setClient" label="Client">
-                        </v-select>
+                        <v-autocomplete v-model="autoClient" :hint="!isEditing ? 'Start typing the client name' : 'Click the icon to save'" :items="clients" item-text="name" item-value="id" label="Client" persistent-hint  @change="setClient">
+                            <v-slide-x-reverse-transition slot="append-outer" mode="out-in">
+                            </v-slide-x-reverse-transition>
+                          </v-autocomplete>
                         <v-text-field v-model="epicFrom.name" :rules="nameRules" label="Name" required>
                         </v-text-field>
                         <v-text-field v-model="epicFrom.summary" label="Summary">
@@ -22,6 +24,12 @@
               <v-btn @click="createEpic(epicFrom)" flat color="black">Create Epic</v-btn>
              </v-card-actions>
           </v-card>
+          <v-snackbar v-model="snackbar" :bottom="y === 'bottom'" :left="x === 'left'" :multi-line="mode === 'multi-line'" :right="x === 'right'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+            {{ error }}
+            <v-btn color="white" flat @click="snackbar = false">
+              Close
+            </v-btn>
+          </v-snackbar>
     </v-container >
   </template>
 <script>
@@ -31,7 +39,15 @@ export default {
   name: 'CreateEpic',
   data () {
     return {
+      snackbar: false,
+      y: 'top',
+      x: null,
+      mode: '',
+      timeout: 6000,
+      error: '',
       clients: [],
+      isEditing: '',
+      autoClient: '',
       selectedClientId: null,
       epicFrom: {
         name: '',
@@ -64,8 +80,14 @@ export default {
           console.log(response.data)
           this.$router.push('/epic/' + response.data.epic.id)
         })
-        .catch(e => {
-          this.errors.push(e)
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          if (error.response.status === 422) {
+            this.error = 'Name, Client of the Epic is required'
+          } else {
+            this.error = error.response.data.name
+          }
         })
     },
     getClients () {
@@ -74,8 +96,10 @@ export default {
           let clients = response.data.clients
           this.clients = clients
         })
-        .catch(e => {
-          this.errors.push(e)
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          this.error = 'Cannot get clients'
         })
     },
     setClient (item) {

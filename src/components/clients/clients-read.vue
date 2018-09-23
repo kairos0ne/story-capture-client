@@ -18,7 +18,7 @@
                     <td class="table-row">
                         <v-icon>edit</v-icon>
                     </td>
-                    <td class="table-row">
+                    <td @click="deleteEpic(props.item)" class="table-row">
                         <v-icon>delete</v-icon>
                     </td>
                   </template>
@@ -145,7 +145,6 @@ export default {
       HTTP.get('/users/' + this.user.id + '/clients/' + this.$route.params.id)
         .then(response => {
           this.client = response.data.client
-          this.epics = response.data.client.epic
         })
         .catch(e => {
           this.errors.push(e)
@@ -154,8 +153,7 @@ export default {
     getEpics () {
       HTTP.get('/users/' + this.user.id + '/clients/' + this.$route.params.id + '/epics')
         .then(response => {
-          let epics = response.data.epics
-          this.epics = epics
+          this.epics = response.data.epics
         })
         .catch(e => {
           this.errors.push(e)
@@ -176,6 +174,15 @@ export default {
     },
     createEpic () {
       this.$router.push('/epics-create')
+    },
+    deleteEpic (epic) {
+      HTTP.delete('/users/' + this.user.id + '/clients/' + this.client.id + '/epics/' + epic.id)
+        .then(response => {
+          this.getEpics()
+        })
+        .catch(e => {
+          this.errors.push(e)
+        })
     }
   }
 }

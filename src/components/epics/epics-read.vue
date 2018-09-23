@@ -97,3 +97,8 @@ export default {
   }
 }
 </script>
+<style lang="sass">
+.remove-link-styles
+  text-decoration: none
+  color: black
+</style>

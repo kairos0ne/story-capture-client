@@ -72,12 +72,12 @@ export default {
           this.errors.push(e)
         })
       if (this.auth.isAuthenticated) {
-        this.$router.push('/')
+        this.$router.push('/clients')
       }
     },
     checkAuth () {
       if (this.auth.isAuthenticated) {
-        this.$router.push('/')
+        this.$router.push('/clients')
       }
     }
   }

@@ -20,6 +20,12 @@
               <v-btn @click="updateClient(user)" flat color="black">Update Client</v-btn>
              </v-card-actions>
           </v-card>
+          <v-snackbar v-model="snackbar" :bottom="y === 'bottom'" :left="x === 'left'" :multi-line="mode === 'multi-line'" :right="x === 'right'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+            {{ error }}
+            <v-btn color="white" flat @click="snackbar = false">
+              Close
+            </v-btn>
+          </v-snackbar>
     </v-container >
   </template>
 <script>
@@ -29,6 +35,12 @@ export default {
   name: 'client-update',
   data () {
     return {
+      snackbar: false,
+      y: 'top',
+      x: null,
+      mode: '',
+      timeout: 6000,
+      error: '',
       clientForm: {
         name: '',
         description: '',
@@ -64,8 +76,10 @@ export default {
         .then(response => {
           console.log(response.data)
         })
-        .catch(e => {
-          this.errors.push(e)
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          this.error = 'Cannot update client'
         })
       this.$router.push('/clients')
     },

@@ -26,10 +26,10 @@
     <v-dialog v-model="dialog" width="500">
         <v-card>
           <v-card-title class="headline grey lighten-2" primary-title>
-            Privacy Policy
+            Confirm Delete
           </v-card-title>
           <v-card-text>
-            This action will perminantly delte the Client and all Epics and Stories the Client has.
+            This action will perminantly delete this item and all its subsidaries.
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
@@ -40,6 +40,12 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-snackbar v-model="snackbar" :bottom="y === 'bottom'" :left="x === 'left'" :multi-line="mode === 'multi-line'" :right="x === 'right'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+        {{ error }}
+        <v-btn color="white" flat @click="snackbar = false">
+          Close
+        </v-btn>
+      </v-snackbar>
   </v-container>
 </template>
 <script>
@@ -48,6 +54,12 @@ import {HTTP} from '@/http-common.js'
 export default {
   data () {
     return {
+      snackbar: false,
+      y: 'top',
+      x: null,
+      mode: '',
+      timeout: 6000,
+      error: '',
       dialog: false,
       SetDeleteClient: {},
       clientArray: [],
@@ -109,8 +121,10 @@ export default {
         .then(response => {
           this.clientArray = response.data.clients
         })
-        .catch(e => {
-          this.errors.push(e)
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          this.error = 'Cannot get clients'
         })
     },
     visitClient (client) {
@@ -130,8 +144,10 @@ export default {
           this.getClients()
           this.dialog = false
         })
-        .catch(e => {
-          this.errors.push(e)
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          this.error = 'Cannot delete client'
         })
     },
     editClient (client) {

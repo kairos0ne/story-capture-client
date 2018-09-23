@@ -150,6 +150,9 @@ export default {
     user () {
       return this.$store.getters.getUser
     },
+    epic () {
+      return this.$store.getters.getCurrentEpic
+    },
     client () {
       return this.$store.getters.getCurrentClient
     }
@@ -227,6 +230,7 @@ export default {
     },
     checkClientSelected () {
       if (this.client) {
+        console.log(this.client)
       }
     }
   }

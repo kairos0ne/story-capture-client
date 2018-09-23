@@ -16,9 +16,9 @@
                         <v-icon @click="visitEpic(props.item)">pageview</v-icon>
                     </td>
                     <td class="table-row">
-                        <v-icon>edit</v-icon>
+                        <v-icon @click="editEpic(props.item)">edit</v-icon>
                     </td>
-                    <td @click="deleteEpic(props.item)" class="table-row">
+                    <td @click="deleteConfirmEpic(props.item)" class="table-row">
                         <v-icon>delete</v-icon>
                     </td>
                   </template>
@@ -33,7 +33,7 @@
                     <td>{{ props.item.story_type }}</td>
                     <td>{{ props.item.points }}</td>
                     <td class="table-row">
-                        <v-icon>edit</v-icon>
+                        <v-icon @click="editStory(props.item)">edit</v-icon>
                     </td>
                     <td class="table-row">
                         <v-icon>delete</v-icon>
@@ -42,10 +42,34 @@
                 </v-data-table>
                 <v-btn><router-link class="remove-link-styles" to="/stories-create">Create Story</router-link></v-btn>
                 <v-btn @click="exportCSV()" :download="fileName">Export CSV</v-btn>
+                <v-btn @click="exportXLS()" :download="fileName">Export XLS</v-btn>
             </v-flex>
           </v-layout>
         </v-container>
       </v-responsive>
+      <v-dialog v-model="dialog" width="500">
+        <v-card>
+          <v-card-title class="headline grey lighten-2" primary-title>
+            Confirm Delete
+          </v-card-title>
+          <v-card-text>
+            This action will perminantly delete this item and all its subsidaries.
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" flat @click="deleteEpic(SetDeleteEpic)">
+              Delete
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-snackbar v-model="snackbar" :bottom="y === 'bottom'" :left="x === 'left'" :multi-line="mode === 'multi-line'" :right="x === 'right'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+        {{ error }}
+        <v-btn color="white" flat @click="snackbar = false">
+          Close
+        </v-btn>
+      </v-snackbar>
   </v-container>
 </template>
 <script>
@@ -56,6 +80,14 @@ export default {
   name: 'ClientRead',
   data () {
     return {
+      snackbar: false,
+      y: 'top',
+      x: null,
+      mode: '',
+      timeout: 6000,
+      error: '',
+      dialog: false,
+      SetDeleteEpic: {},
       client: {},
       epics: [],
       headers: [
@@ -146,8 +178,10 @@ export default {
         .then(response => {
           this.client = response.data.client
         })
-        .catch(e => {
-          this.errors.push(e)
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          this.error = 'Cannot get client'
         })
     },
     getEpics () {
@@ -155,8 +189,10 @@ export default {
         .then(response => {
           this.epics = response.data.epics
         })
-        .catch(e => {
-          this.errors.push(e)
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          this.error = 'Cannot get epics'
         })
     },
     visitEpic (epic) {
@@ -168,8 +204,22 @@ export default {
           let blob = new File([response.data], 'export.csv')
           FileSaver.saveAs(blob, 'export.csv')
         })
-        .catch(e => {
-          this.errors.push(e)
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          this.error = 'Cannot export CSV'
+        })
+    },
+    exportXLS () {
+      HTTP.get('/users/' + this.user.id + '/clients/' + this.$route.params.id + '/export.xls')
+        .then(response => {
+          let blob = new File([response.data], 'export.xls')
+          FileSaver.saveAs(blob, 'export.xls')
+        })
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          this.error = 'Cannot export XLS'
         })
     },
     createEpic () {
@@ -179,10 +229,21 @@ export default {
       HTTP.delete('/users/' + this.user.id + '/clients/' + this.client.id + '/epics/' + epic.id)
         .then(response => {
           this.getEpics()
+          this.dialog = false
         })
-        .catch(e => {
-          this.errors.push(e)
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          this.error = 'Cannot delete epic'
         })
+    },
+    deleteConfirmEpic (epic) {
+      this.dialog = true
+      this.SetDeleteEpic = epic
+    },
+    editEpic (epic) {
+      this.$store.dispatch('setCurrentEpic', epic)
+      this.$router.push('/epics-update')
     }
   }
 }

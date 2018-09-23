@@ -25,6 +25,12 @@
           </v-layout>
         </v-container>
       </v-responsive>
+      <v-snackbar v-model="snackbar" :bottom="y === 'bottom'" :left="x === 'left'" :multi-line="mode === 'multi-line'" :right="x === 'right'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+        {{ error }}
+        <v-btn color="white" flat @click="snackbar = false">
+          Close
+        </v-btn>
+      </v-snackbar>
   </v-container>
 </template>
 <script>
@@ -33,6 +39,12 @@ import { HTTP } from '@/http-common.js'
 export default {
   data () {
     return {
+      snackbar: false,
+      y: 'top',
+      x: null,
+      mode: '',
+      timeout: 6000,
+      error: '',
       epic: {},
       stories: [],
       headers: [
@@ -87,8 +99,10 @@ export default {
           this.stories = response.data.epic.stories
           console.log(response.data.epic.stories)
         })
-        .catch(e => {
-          this.errors.push(e)
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          this.error = 'Cannot get epic'
         })
     },
     visitStory (story) {

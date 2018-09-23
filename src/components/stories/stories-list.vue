@@ -15,6 +15,12 @@
       </template>
     </v-data-table>
     <v-btn @click="createStory">Create Story</v-btn>
+    <v-snackbar v-model="snackbar" :bottom="y === 'bottom'" :left="x === 'left'" :multi-line="mode === 'multi-line'" :right="x === 'right'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
+      {{ error }}
+      <v-btn color="white" flat @click="snackbar = false">
+        Close
+      </v-btn>
+    </v-snackbar>
   </v-container>
 </template>
 <script>
@@ -23,6 +29,12 @@ import {HTTP} from '@/http-common.js'
 export default {
   data () {
     return {
+      snackbar: false,
+      y: 'top',
+      x: null,
+      mode: '',
+      timeout: 6000,
+      error: '',
       storyArray: [],
       headers: [
         {
@@ -77,8 +89,10 @@ export default {
         .then(response => {
           this.storyArray = response.data.stories
         })
-        .catch(e => {
-          this.errors.push(e)
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          this.error = 'Cannot get stories'
         })
     },
     createStory () {

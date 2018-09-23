@@ -11,6 +11,7 @@ import clientsUpdate from '@/components/clients/clients-update'
 import epic from '@/components/epics/epics-read'
 import epicsList from '@/components/epics/epics-list'
 import epicsCreate from '@/components/epics/epics-create'
+import epicsUpdate from '@/components/epics/epics-update'
 import storiesCreate from '@/components/stories/stories-create'
 import storiesList from '@/components/stories/stories-list'
 
@@ -62,6 +63,11 @@ export default new Router({
       path: '/epic/:id',
       name: 'epic',
       component: epic
+    },
+    {
+      path: '/epics-update',
+      name: 'epics-update',
+      component: epicsUpdate
     },
     {
       path: '/epics',

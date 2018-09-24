@@ -17,7 +17,8 @@ const state = {
   },
   user: {},
   selectedClient: {},
-  selectedEpic: {}
+  selectedEpic: {},
+  selectedStory: {}
 }
 
 const mutations = {
@@ -41,6 +42,9 @@ const mutations = {
   },
   [types.SET_CURRENT_EPIC] (state, epic) {
     state.selectedEpic = epic
+  },
+  [types.SET_CURRENT_STORY] (state, story) {
+    state.selectedStory = story
   }
 }
 

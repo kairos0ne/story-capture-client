@@ -64,6 +64,7 @@ export default {
   },
   mounted () {
     this.getClients()
+    this.checkClientSelected()
   },
   computed: {
     auth () {
@@ -71,6 +72,9 @@ export default {
     },
     user () {
       return this.$store.getters.getUser
+    },
+    client () {
+      return this.$store.getters.getCurrentClient
     }
   },
   methods: {
@@ -78,6 +82,7 @@ export default {
       HTTP.post('/users/' + this.user.id + '/clients/' + this.selectedClientId + '/epics', form)
         .then(response => {
           console.log(response.data)
+          this.$store.dispatch('setCurrentEpic', response.data.epic)
           this.$router.push('/epic/' + response.data.epic.id)
         })
         .catch(error => {
@@ -105,6 +110,13 @@ export default {
     setClient (item) {
       this.epicFrom.client_id = item
       this.selectedClientId = item
+    },
+    checkClientSelected () {
+      if (this.client) {
+        this.autoClient = this.client.id
+      } else {
+        this.autoClient = ''
+      }
     }
   }
 }

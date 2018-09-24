@@ -9,7 +9,7 @@
               <v-divider class="my-3"></v-divider>
               <v-data-table :headers="headers" :items="stories" hide-actions class="elevation-1">
                   <template slot="items" slot-scope="props">
-                    <td>{{ props.item.task }}</td>
+                    <td @click="setStory(props.item)">{{ props.item.task }}</td>
                     <td>{{ props.item.story_type }}</td>
                     <td>{{ props.item.points }}</td>
                     <td class="table-row">
@@ -107,6 +107,9 @@ export default {
     },
     visitStory (story) {
       this.$router.push('/story/' + story.id)
+    },
+    setStory (story) {
+      this.$store.dispatch('setCurrentStory', story)
     }
   }
 }

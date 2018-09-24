@@ -9,7 +9,7 @@
               <v-divider class="my-3"></v-divider>
               <v-data-table :headers="headers" :items="epics" hide-actions class="elevation-1">
                   <template slot="items" slot-scope="props">
-                    <td>{{ props.item.name }}</td>
+                    <td @click="visitEpic(props.item)">{{ props.item.name }}</td>
                     <td>{{ props.item.summary }}</td>
                     <td>{{ props.item.stories.length }}</td>
                     <td class="table-row">
@@ -29,7 +29,7 @@
               <v-divider class="my-3"></v-divider>
               <v-data-table :headers="storyHeaders" :items="client.stories" hide-actions class="elevation-1">
                   <template slot="items" slot-scope="props">
-                    <td>{{ props.item.task }}</td>
+                    <td @click="setStory(props.item)">{{ props.item.task }}</td>
                     <td>{{ props.item.story_type }}</td>
                     <td>{{ props.item.points }}</td>
                     <td class="table-row">
@@ -197,6 +197,7 @@ export default {
     },
     visitEpic (epic) {
       this.$router.push('/epic/' + epic.id)
+      this.$store.dispatch('setCurrentEpic', epic)
     },
     exportCSV () {
       HTTP.get('/users/' + this.user.id + '/clients/' + this.$route.params.id + '/export.csv')
@@ -244,6 +245,13 @@ export default {
     editEpic (epic) {
       this.$store.dispatch('setCurrentEpic', epic)
       this.$router.push('/epics-update')
+    },
+    setStory (story) {
+      this.$store.dispatch('setCurrentStory', story)
+    },
+    editStory (story) {
+      this.$store.dispatch('setCurrentStory', story)
+      this.$router.push('/stories-update')
     }
   }
 }

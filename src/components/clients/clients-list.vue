@@ -130,6 +130,8 @@ export default {
     visitClient (client) {
       this.$router.push('client/' + client.id.toString())
       this.$store.dispatch('setCurrentClient', client)
+      this.$store.dispatch('setCurrentEpic', {})
+      this.$store.dispatch('setCurrentStory', {})
     },
     createClient (user) {
       this.$router.push('clients-create')

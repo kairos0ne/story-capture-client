@@ -19,3 +19,6 @@ export const setCurrentClient = ({ commit }, client) => {
 export const setCurrentEpic = ({ commit }, epic) => {
   commit('SET_CURRENT_EPIC', epic)
 }
+export const setCurrentStory = ({ commit }, story) => {
+  commit('SET_CURRENT_STORY', story)
+}

@@ -142,6 +142,7 @@ export default {
   mounted () {
     this.getClients()
     this.checkClientSelected()
+    this.checkEpicSelected()
   },
   computed: {
     auth () {
@@ -230,7 +231,16 @@ export default {
     },
     checkClientSelected () {
       if (this.client) {
-        console.log(this.client)
+        this.autoClient = this.client.id
+      } else {
+        this.autoClient = ''
+      }
+    },
+    checkEpicSelected () {
+      if (this.epic) {
+        this.autoEpic = this.epic.id
+      } else {
+        this.autoEpic = ''
       }
     }
   }

@@ -3,11 +3,11 @@
      <h1>Stories</h1>
     <v-data-table :headers="headers" :items="storyArray" hide-actions class="elevation-1">
       <template slot="items" slot-scope="props">
-        <td>{{ props.item.task }}</td>
+        <td @click="setStory(props.item)">{{ props.item.task }}</td>
         <td>{{ props.item.story_type }}</td>
         <td>{{ props.item.points }}</td>
         <td class="table-row">
-            <v-icon>edit</v-icon>
+            <v-icon @click="editStory(props.item)">edit</v-icon>
         </td>
         <td class="table-row">
             <v-icon>delete</v-icon>
@@ -97,6 +97,13 @@ export default {
     },
     createStory () {
       this.$router.push('stories-create')
+    },
+    setStory (story) {
+      this.$store.dispatch('setCurrentStory', story)
+    },
+    editStory (story) {
+      this.$store.dispatch('setCurrentStory', story)
+      this.$router.push('/stories-update')
     }
   }
 }

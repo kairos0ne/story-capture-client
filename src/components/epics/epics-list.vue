@@ -12,7 +12,7 @@
             <v-icon @click="visitEpic(props.item)">pageview</v-icon>
         </td>
         <td class="table-row">
-            <v-icon>edit</v-icon>
+            <v-icon @click="editEpic(props.item)">edit</v-icon>
         </td>
         <td class="table-row">
             <v-icon>delete</v-icon>
@@ -106,6 +106,11 @@ export default {
     },
     visitEpic (epic) {
       this.$router.push('epic/' + epic.id.toString())
+      this.$store.dispatch('setCurrentEpic', epic)
+      this.$store.dispatch('setCurrentStory', {})
+    },
+    editEpic (epic) {
+      this.$router.push('epics-update')
       this.$store.dispatch('setCurrentEpic', epic)
     },
     createEpic (user) {

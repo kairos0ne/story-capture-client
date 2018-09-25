@@ -44,7 +44,7 @@
 import { HTTP } from '@/http-common.js'
 
 export default {
-  name: 'CreateStory',
+  name: 'UpdateStory',
   data () {
     return {
       snackbar: false,
@@ -58,6 +58,7 @@ export default {
       autoType: '',
       isEditing: '',
       storyUpdated: {},
+      storyItem: {},
       clients: [],
       epics: [],
       types: [
@@ -100,6 +101,7 @@ export default {
     this.checkClientSelected()
     this.checkEpicSelected()
     this.setFormItems()
+    this.getStory()
   },
   computed: {
     auth () {
@@ -122,13 +124,12 @@ export default {
     updateStory (form) {
       HTTP.put('/users/' + this.user.id + '/clients/' + this.selectedClientId + '/epics/' + this.selectedEpicId + '/stories/' + this.story.id, form)
         .then(response => {
-          console.log(response.data)
           this.storyUpdated = response.data.story
-          this.dialog = true
+          this.$store.dispatch('setCurrentStory', response.data.story)
+          this.$router.push('/stories')
         })
         .catch(error => {
           this.snackbar = true
-          console.log(error.response)
           if (error.response.status === 422) {
             this.error = 'Task, Client and Epic of the story is required'
           } else {
@@ -160,6 +161,19 @@ export default {
           this.error = 'Cannot get epics'
         })
     },
+    getStory () {
+      HTTP.get('/users/' + this.user.id + '/clients/' + this.client.id + '/epics/' + this.epic.id + '/stories/' + this.story.id)
+        .then(response => {
+          let story = response.data.story
+          this.storyItem = story
+          this.storyForm.epic_id = story.epic.id
+        })
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          this.error = 'Cannot get story'
+        })
+    },
     setClient (item) {
       this.selectedClientId = item
       this.getEpics(item)
@@ -167,26 +181,8 @@ export default {
     setEpic (item) {
       this.selectedEpicId = item
     },
-    gotoStory (storyCreated) {
-      this.$router.push('/story/' + this.storyCreated.id)
-    },
-    clearForm () {
-      this.storyForm.task = ''
-      this.storyForm.points = null
-      this.dialog = false
-    },
     setType (item) {
-      console.log(item)
       this.storyForm.story_type = item
-    },
-    gotoClients  () {
-      this.$router.push('/clients')
-    },
-    createClient () {
-      this.$router.push('/clients-create')
-    },
-    createEpic () {
-      this.$router.push('/epics-create')
     },
     checkClientSelected () {
       if (this.client) {

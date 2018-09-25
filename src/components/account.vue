@@ -38,7 +38,7 @@ export default {
         .catch(error => {
           this.snackbar = true
           console.log(error.response)
-          this.error = 'Cannot delete client'
+          this.error = 'Cannot get User'
         })
     }
   }

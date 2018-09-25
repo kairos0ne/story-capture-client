@@ -13,7 +13,7 @@
                     <td>{{ props.item.story_type }}</td>
                     <td>{{ props.item.points }}</td>
                     <td class="table-row">
-                        <v-icon>edit</v-icon>
+                        <v-icon @click="editStory(props.item)">edit</v-icon>
                     </td>
                     <td class="table-row">
                         <v-icon>delete</v-icon>
@@ -110,6 +110,10 @@ export default {
     },
     setStory (story) {
       this.$store.dispatch('setCurrentStory', story)
+    },
+    editStory (story) {
+      this.$store.dispatch('setCurrentStory', story)
+      this.$router.push('/stories-update')
     }
   }
 }

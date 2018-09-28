@@ -70,7 +70,6 @@ export default {
           text: 'Edit',
           value: 'icon',
           align: 'left'
-
         },
         {
           text: 'Delete',

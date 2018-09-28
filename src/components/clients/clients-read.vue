@@ -32,22 +32,15 @@
                     <td @click="setStory(props.item)">{{ props.item.task }}</td>
                     <td>{{ props.item.story_type }}</td>
                     <td>{{ props.item.points }}</td>
-                    <td class="table-row">
-                        <v-icon @click="editStory(props.item)">edit</v-icon>
-                    </td>
-                    <td class="table-row">
-                        <v-icon>delete</v-icon>
-                    </td>
                   </template>
                 </v-data-table>
                 <v-btn><router-link class="remove-link-styles" to="/stories-create">Create Story</router-link></v-btn>
                 <v-btn @click="exportCSV()" :download="fileName">Export CSV</v-btn>
-                <v-btn @click="exportXLS()" :download="fileName">Export XLS</v-btn>
             </v-flex>
           </v-layout>
         </v-container>
       </v-responsive>
-      <v-dialog v-model="dialog" width="500">
+      <v-dialog v-model="dialog1" width="500">
         <v-card>
           <v-card-title class="headline grey lighten-2" primary-title>
             Confirm Delete
@@ -59,6 +52,23 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="primary" flat @click="deleteEpic(SetDeleteEpic)">
+              Delete
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="dialog2" width="500">
+        <v-card>
+          <v-card-title class="headline grey lighten-2" primary-title>
+            Confirm Delete
+          </v-card-title>
+          <v-card-text>
+            This action will perminantly delete this item and all its subsidaries.
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" flat @click="deleteStory(SetDeleteStory)">
               Delete
             </v-btn>
           </v-card-actions>
@@ -86,8 +96,10 @@ export default {
       mode: '',
       timeout: 6000,
       error: '',
-      dialog: false,
+      dialog1: false,
+      dialog2: false,
       SetDeleteEpic: {},
+      SetDeleteStory: {},
       client: {},
       epics: [],
       headers: [
@@ -144,18 +156,6 @@ export default {
           value: 'points',
           align: 'left',
           sortable: false
-        },
-
-        {
-          text: 'Edit',
-          value: 'icon',
-          align: 'left'
-
-        },
-        {
-          text: 'Delete',
-          value: 'icon',
-          align: 'left'
         }
       ],
       fileName: 'export_stories.csv'
@@ -211,18 +211,6 @@ export default {
           this.error = 'Cannot export CSV'
         })
     },
-    exportXLS () {
-      HTTP.get('/users/' + this.user.id + '/clients/' + this.$route.params.id + '/export.xls')
-        .then(response => {
-          let blob = new File([response.data], 'export.xls')
-          FileSaver.saveAs(blob, 'export.xls')
-        })
-        .catch(error => {
-          this.snackbar = true
-          console.log(error.response)
-          this.error = 'Cannot export XLS'
-        })
-    },
     createEpic () {
       this.$router.push('/epics-create')
     },
@@ -230,7 +218,23 @@ export default {
       HTTP.delete('/users/' + this.user.id + '/clients/' + this.client.id + '/epics/' + epic.id)
         .then(response => {
           this.getEpics()
-          this.dialog = false
+          this.dialog1 = false
+        })
+        .catch(error => {
+          this.snackbar = true
+          console.log(error.response)
+          this.error = 'Cannot delete epic'
+        })
+    },
+    deleteConfirmStory (story) {
+      this.dialog2 = true
+      this.SetDeleteStory = story
+    },
+    deleteStory (story) {
+      HTTP.delete('/users/' + this.user.id + '/clients/' + this.client.id + '/epics/' + this.epic.id + '/stories/' + story.id)
+        .then(response => {
+          this.getEpics()
+          this.dialog2 = false
         })
         .catch(error => {
           this.snackbar = true

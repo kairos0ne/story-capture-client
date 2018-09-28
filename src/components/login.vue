@@ -33,6 +33,11 @@ export default {
         email: '',
         password: ''
       },
+      jiraAuth: {
+        clientId: 'LqD8mcIP6oiE1itB4lB4xChOCZWH4iqR',
+        apiToken: 'EW4aE7t205HXTScy1SUn0DFE'
+
+      },
       valid: false,
       password: '',
       passwordRules: [
@@ -79,6 +84,13 @@ export default {
       if (this.auth.isAuthenticated) {
         this.$router.push('/clients')
       }
+    },
+    loginJira () {
+      let client = this.clientId
+      HTTP.get('')
+      .then(response => {
+        console.log(response)
+      })
     }
   }
 }

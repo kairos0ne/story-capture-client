@@ -15,6 +15,7 @@ import epicsUpdate from '@/components/epics/epics-update'
 import storiesCreate from '@/components/stories/stories-create'
 import storiesList from '@/components/stories/stories-list'
 import storiesUpdate from '@/components/stories/stories-update'
+import storiesRead from '@/components/stories/stories-read'
 import account from '@/components/account'
 
 Vue.use(Router)
@@ -90,6 +91,11 @@ export default new Router({
       path: '/stories',
       name: 'stories',
       component: storiesList
+    },
+    {
+      path: '/story/:id',
+      name: 'story',
+      component: storiesRead
     },
     {
       path: '/stories-update',

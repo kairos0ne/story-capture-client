@@ -18,7 +18,13 @@ const state = {
   user: {},
   selectedClient: {},
   selectedEpic: {},
-  selectedStory: {}
+  selectedStory: {},
+  jiraToken: {},
+  code: '',
+  basicAuth: '',
+  cloudDetails: {},
+  selectedProject: {},
+  selectedIssue: {}
 }
 
 const mutations = {
@@ -45,6 +51,24 @@ const mutations = {
   },
   [types.SET_CURRENT_STORY] (state, story) {
     state.selectedStory = story
+  },
+  [types.SET_CODE] (state, code) {
+    state.code = code
+  },
+  [types.SET_JIRA_TOKEN] (state, jiraToken) {
+    state.jiraToken = jiraToken
+  },
+  [types.SET_BASIC_AUTH] (state, token) {
+    state.basicAuth = token
+  },
+  [types.SET_CLOUD_ID] (state, cloud) {
+    state.cloudDetails = cloud
+  },
+  [types.SET_PROJECT] (state, project) {
+    state.selectedProject = project
+  },
+  [types.SET_ISSUE] (state, issue) {
+    state.selectedIssue = issue
   }
 }
 

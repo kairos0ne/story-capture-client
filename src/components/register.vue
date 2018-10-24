@@ -6,6 +6,7 @@
           </v-card-title>
           <v-container grid-list-sm class="pa-4">
             <v-layout row wrap>
+              <p> You must use the email that you use to login with Jira.</p>
               <v-flex xs12 align-center justify-space-between>
                   <v-form v-model="valid">
                       <v-text-field v-model="userDetails.user.name" :rules="nameRules" :counter="10" label="Name" required>

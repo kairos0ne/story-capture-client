@@ -22,3 +22,21 @@ export const setCurrentEpic = ({ commit }, epic) => {
 export const setCurrentStory = ({ commit }, story) => {
   commit('SET_CURRENT_STORY', story)
 }
+export const setCode = ({ commit }, code) => {
+  commit('SET_CODE', code)
+}
+export const setJiraToken = ({ commit }, jiraToken) => {
+  commit('SET_JIRA_TOKEN', jiraToken)
+}
+export const setBasicAuth = ({ commit }, token) => {
+  commit('SET_BASIC_AUTH', token)
+}
+export const setCloudId = ({ commit }, cloud) => {
+  commit('SET_CLOUD_ID', cloud)
+}
+export const setProject = ({ commit }, project) => {
+  commit('SET_PROJECT', project)
+}
+export const setIssue = ({ commit }, issue) => {
+  commit('SET_ISSUE', issue)
+}

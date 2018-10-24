@@ -6,11 +6,12 @@
             </v-card-title>
             <v-container grid-list-sm class="pa-4">
               <v-layout row wrap>
+                <p> You must use the email that you use to login with Jira.</p>
                 <v-flex xs12 align-center justify-space-between>
                     <v-form v-model="valid">
                         <v-text-field v-model="authDetails.email" :rules="emailRules" label="Email" required>
                         </v-text-field>
-                        <v-text-field v-model="authDetails.password" :rules="passwordRules" label="Password">
+                        <v-text-field type="password" v-model="authDetails.password" :rules="passwordRules" label="Password">
                         </v-text-field>
                     </v-form>
                 </v-flex>
@@ -29,6 +30,7 @@ export default {
   name: 'login',
   data () {
     return {
+      YOUR_USER_BOUND_VALUE: 'test',
       authDetails: {
         email: '',
         password: ''
@@ -66,7 +68,8 @@ export default {
           this.$store.dispatch('setAuthToken', token)
           this.$store.dispatch('setUser', user)
           this.$store.dispatch('setAuth', token)
-          location.reload()
+          this.$router.push('/account')
+          // window.location.href = `https://accounts.atlassian.com/authorize?audience=api.atlassian.com&client_id=LqD8mcIP6oiE1itB4lB4xChOCZWH4iqR&scope=read%3Ajira-user%20read%3Ajira-work%20manage%3Ajira-project%20write%3Ajira-work&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fauth%2Fcallback&state=${this.YOUR_USER_BOUND_VALUE}&response_type=code&prompt=consent`
         })
         .catch(e => {
           this.errors.push(e)

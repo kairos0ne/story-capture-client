@@ -21,6 +21,10 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
+    // Turn off key in v-for
+    "vue/require-v-for-key": "off",
+    // Turn off vue valid for
+    "vue/valid-v-for": "off",
     // allow async-await
     'generator-star-spacing': 'off',
     // allow debugger during development

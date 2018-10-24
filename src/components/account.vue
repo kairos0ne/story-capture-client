@@ -7,7 +7,7 @@
       <p class="mail"><v-icon class="mail-icon">mail</v-icon>{{ user.email}}</p>
       <p class="mail"><v-icon class="mail-icon">account_box</v-icon>{{ user.name}}</p>
       <p class="mail"><v-icon class="mail-icon">vpn_key</v-icon>{{ user.token }}</p>
-      <v-btn>Update Details</v-btn>
+      <v-btn @click="updateProfile">Update Details</v-btn>
       <v-btn>Delete Account</v-btn>
     </v-flex>
   </v-container>
@@ -40,6 +40,9 @@ export default {
           console.log(error.response)
           this.error = 'Cannot get User'
         })
+    },
+    updateProfile () {
+      this.$router.push('/account-update')
     }
   }
 }

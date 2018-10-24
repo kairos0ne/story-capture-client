@@ -66,7 +66,9 @@
           </v-toolbar>
         <v-content >
           <!-- Start content section -->
-          <router-view></router-view>
+          <transition name="fade" mode="out-in">
+            <router-view></router-view>
+          </transition>
         </v-content>
         <v-btn fab bottom right color="black" dark fixed @click="dialog = !dialog">
           <v-icon>add</v-icon>
@@ -78,39 +80,32 @@
             </v-card-title>
             <v-container grid-list-sm class="pa-4">
               <v-layout row justify-space-between>
-                <v-flex xs4 align-center >
+                <v-flex align-center md6 xs12 d-flex>
                     <v-card color="grey darken-2 fab-card" class="white--text">
                         <v-card-title primary-title>
-                          <div class="headline">Create a client</div>
-                          <div>Create a client so that you can create epics and stories against that client.</div>
+                          <div class="headline">Create an Issue</div>
                         </v-card-title>
+                        <v-card-text>
+                          <p>Create an issue for the selected project.</p>
+                        </v-card-text>
                         <v-card-actions>
-                          <v-btn class="fab-card-button"  flat dark @click="createClient" >Create client</v-btn>
+                          <v-btn class="fab-card-button"  flat dark @click="createIssue" >Create Issue</v-btn>
                         </v-card-actions>
                       </v-card>
                 </v-flex>
-                <v-flex xs4 align-center >
-                    <v-card color="grey darken-2 fab-card" class="white--text">
-                        <v-card-title primary-title>
-                          <div class="headline">Create a epic</div>
-                          <div>Create a epic so that you can assign stories against that epic.</div>
-                        </v-card-title>
-                        <v-card-actions>
-                          <v-btn class="fab-card-button" flat dark @click="createEpic">Create Epic</v-btn>
-                        </v-card-actions>
-                      </v-card>
-                </v-flex>
-                <v-flex xs4 align-center >
-                    <v-card color="grey darken-2 fab-card" class="white--text">
-                        <v-card-title primary-title>
-                          <div class="headline">Create a story</div>
-                          <div>Create stories for a given client and epic.</div>
-                        </v-card-title>
-                        <v-card-actions>
-                          <v-btn class="fab-card-button" flat dark @click="createStory">Create Story</v-btn>
-                        </v-card-actions>
-                      </v-card>
-                </v-flex>
+                <v-flex align-center md6 xs12 d-flex>
+                  <v-card color="grey darken-2 fab-card" class="white--text">
+                      <v-card-title primary-title>
+                        <div class="headline">Create a Project</div>
+                      </v-card-title>
+                      <v-card-text>
+                        <p>Create an project.</p>
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-btn class="fab-card-button"  flat dark @click="createProject" >Create Project</v-btn>
+                      </v-card-actions>
+                    </v-card>
+              </v-flex>
               </v-layout>
             </v-container>
           </v-card>
@@ -129,9 +124,8 @@ export default {
       dialog: false,
       drawer: false,
       loggedInItems: [
-        { icon: 'contacts', text: 'Clients', url: '/clients' },
-        { icon: 'description', text: 'Epics', url: '/epics' },
-        { icon: 'content_copy', text: 'Stories', url: '/stories' }
+        { icon: 'description', text: 'Projects', url: '/projects' },
+        { icon: 'portrait', text: 'Account', url: '/account' }
       ],
       loggedOutItems: [
         { icon: 'folder', text: 'About', url: '/' },
@@ -171,16 +165,12 @@ export default {
           this.errors.push(e)
         })
     },
-    createClient () {
-      this.$router.push('/clients-create')
+    createIssue () {
+      this.$router.push('/issues-create')
       this.dialog = false
     },
-    createEpic () {
-      this.$router.push('/epics-create')
-      this.dialog = false
-    },
-    createStory () {
-      this.$router.push('/stories-create')
+    createProject () {
+      this.$router.push('/project-create')
       this.dialog = false
     }
   }
@@ -222,6 +212,16 @@ export default {
 }
 .v-content {
   padding-top: 0px;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s ease-in-out;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+h3 {
+  font-size: 0.5em;
 }
 
 </style>

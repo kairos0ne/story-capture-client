@@ -9,3 +9,9 @@ export const getAuth = state => state.auth
 export const getCurrentClient = state => state.selectedClient
 export const getCurrentEpic = state => state.selectedEpic
 export const getCurrentStory = state => state.selectedStory
+export const getCode = state => state.getCode
+export const getJiraToken = state => state.jiraToken
+export const getBasicAuth = state => state.basicAuth
+export const getCloudId = state => state.cloudDetails.id
+export const getProject = state => state.selectedProject
+export const getIssue = state => state.selectedIssue

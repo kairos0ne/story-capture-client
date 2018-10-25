@@ -3,7 +3,7 @@
   </div>
 </template>
 <script>
-import {HTTP, JIRAAUTH} from '@/http-common.js'
+import {HTTP} from '@/http-common.js'
 
 export default {
   data () {
@@ -53,7 +53,7 @@ export default {
         })
     },
     getCloudId () {
-      JIRAAUTH.get('/oauth/token/accessible-resources')
+      HTTP.get('/oauth/token/accessible-resources')
         .then(response => {
           this.cloudDetails = response.data[0]
           this.$store.dispatch('setCloudId', response.data[0])

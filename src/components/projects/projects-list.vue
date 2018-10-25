@@ -58,7 +58,9 @@ export default {
   created () {
   },
   mounted () {
-    this.getAllProjects()
+    this.$nextTick(() => {
+      this.getAllProjects()
+    })
   },
   computed: {
     user () {

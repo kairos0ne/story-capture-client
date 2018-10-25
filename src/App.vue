@@ -157,7 +157,8 @@ export default {
       this.$store.dispatch('logout')
       HTTP.delete('/logout')
         .then(response => {
-          sessionStorage.setItem('Authorisation', null)
+          localStorage.clear()
+          sessionStorage.clear()
           location.reload()
           this.$router.push('/')
         })

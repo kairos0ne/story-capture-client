@@ -8,7 +8,7 @@
               <v-layout row wrap>
                 <p> You must use the email that you use to login with Jira.</p>
                 <v-flex xs12 align-center justify-space-between>
-                    <v-form v-model="valid">
+                    <v-form >
                         <v-text-field v-model="form.name" :rules="nameRules" label="Name" required>
                         </v-text-field>
                         <v-text-field v-model="form.email" :rules="emailRules" label="Email" required>
@@ -21,7 +21,7 @@
               </v-layout>
             </v-container>
             <v-card-actions>
-              <v-btn @click="updateDetails(user)" flat color="black">Update Details</v-btn>
+              <v-btn @click="updateDetails" flat color="black">Update Details</v-btn>
              </v-card-actions>
           </v-card>
           <v-snackbar v-model="snackbar" :bottom="y === 'bottom'" :left="x === 'left'" :multi-line="mode === 'multi-line'" :right="x === 'right'" :timeout="timeout" :top="y === 'top'" :vertical="mode === 'vertical'">
@@ -56,8 +56,9 @@ export default {
         v => /.+@.+/.test(v) || 'E-mail must be valid'
       ],
       nameRules: [
-        v => !!v || 'Email is required'
-      ]
+        v => !!v || 'Name is required'
+      ],
+      valid: false
     }
   },
   created () {

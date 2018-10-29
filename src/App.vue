@@ -76,7 +76,7 @@
         <v-dialog v-model="dialog" width="800px">
           <v-card>
             <v-card-title class="grey lighten-4 py-4 title">
-              Select Operation
+              Select an option
             </v-card-title>
             <v-container grid-list-sm class="pa-4">
               <v-layout row justify-space-between>

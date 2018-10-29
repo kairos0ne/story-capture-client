@@ -69,7 +69,7 @@ export default {
           this.$store.dispatch('setUser', user)
           this.$store.dispatch('setAuth', token)
           this.$router.push('/account')
-          // window.location.href = `https://accounts.atlassian.com/authorize?audience=api.atlassian.com&client_id=LqD8mcIP6oiE1itB4lB4xChOCZWH4iqR&scope=read%3Ajira-user%20read%3Ajira-work%20manage%3Ajira-project%20write%3Ajira-work&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fauth%2Fcallback&state=${this.YOUR_USER_BOUND_VALUE}&response_type=code&prompt=consent`
+          location.reload()
         })
         .catch(e => {
           this.errors.push(e)

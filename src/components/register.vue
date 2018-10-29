@@ -2,20 +2,20 @@
   <v-container>
       <v-card max-width="600" class="register-card">
           <v-card-title class="grey lighten-4 py-4 title">
-            Registar User
+            Register User
           </v-card-title>
           <v-container grid-list-sm class="pa-4">
             <v-layout row wrap>
-              <p> You must use the email that you use to login with Jira.</p>
+              <p> You must use the email that you use to login with Jira. Choose any password.</p>
               <v-flex xs12 align-center justify-space-between>
                   <v-form v-model="valid">
                       <v-text-field v-model="userDetails.user.name" :rules="nameRules" :counter="10" label="Name" required>
                       </v-text-field>
                       <v-text-field v-model="userDetails.user.email" :rules="emailRules" label="Email" required>
                       </v-text-field>
-                      <v-text-field v-model="userDetails.user.password" :rules="passwordRules" label="Password">
+                      <v-text-field v-model="userDetails.user.password" type="password" :rules="passwordRules" label="Password">
                       </v-text-field>
-                      <v-text-field v-model="userDetails.user.password_confirmation" :rules="passwordRules" label="Password Confirmation">
+                      <v-text-field v-model="userDetails.user.password_confirmation" type="password" :rules="passwordRules" label="Password Confirmation">
                       </v-text-field>
                   </v-form>
               </v-flex>
@@ -49,7 +49,6 @@ export default {
       ],
       passwordRules: [
         v => !!v || 'Passowrd is required',
-        v => v.length <= 6 || 'Password must be 6 charicters',
         v => v.length >= 6 || 'Password must be 6 charicters'
       ],
       emailRules: [
@@ -73,11 +72,11 @@ export default {
         .then(response => {
           let user = response.data
           this.user = user
+          this.$router.push('/login')
         })
         .catch(e => {
           this.errors.push(e)
         })
-      this.$router.push('/login')
     }
   }
 }

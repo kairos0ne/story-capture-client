@@ -10,8 +10,13 @@
       <v-divider class="my-3"></v-divider>
       <v-data-table :headers="headers" :items="projects" hide-actions class="elevation-1">
         <template slot="items" slot-scope="props">
-          <td @click="readProject(props.item)">{{ props.item.name }}</td>
-          <td>{{ props.item.key }}</td>
+          <td class="project-name" @click="readProject(props.item)"><img class="project-icon" :src="props.item.avatarUrls['16x16']" >{{ props.item.name }}</td>
+          <td>
+             <span class="chip-label"><v-chip class="subheading"> {{ props.item.key }}</v-chip></span>
+          </td>
+          <td>
+             <span class="chip-label"><v-chip class="subheading"> {{ props.item.projectTypeKey }}</v-chip></span>
+          </td>
         </template>
       </v-data-table>
       <v-btn @click="createProject">New Project</v-btn>
@@ -43,12 +48,18 @@ export default {
         {
           text: 'Project',
           align: 'left',
-          sortable: true,
+          sortable: false,
           value: 'name'
         },
         {
           text: 'Key',
           value: 'key',
+          align: 'left',
+          sortable: false
+        },
+        {
+          text: 'Type',
+          value: 'type',
           align: 'left',
           sortable: false
         }
@@ -98,4 +109,9 @@ export default {
   top: 50%
   left: 50%
   position: absolute
+.project-icon
+  width: 24px
+  margin-right: 20px
+.project-name
+
 </style>

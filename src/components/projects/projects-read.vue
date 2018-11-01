@@ -12,6 +12,16 @@
         <template slot="items" slot-scope="props">
           <td @click="gotoIssue(props.item)">{{ props.item.fields.summary }}</td>
           <td>{{ props.item.key }}</td>
+          <td>{{ props.item.fields.status.name }}</td>
+          <td v-if="props.item.fields.assignee">
+            <span class="chip-label"><v-chip class="subheading"> {{ props.item.fields.assignee.displayName }}</v-chip></span>
+          </td>
+          <td>
+            <span class="chip-label"><v-chip class="subheading"> {{ props.item.fields.priority.name }}</v-chip></span>
+          </td>
+          <td>
+            <span class="chip-label"><v-chip class="subheading"> {{ props.item.fields.issuetype.name }}</v-chip></span>
+          </td>
         </template>
       </v-data-table>
       <v-btn @click="createIssue" color="grey">Create Issue</v-btn>
@@ -44,12 +54,36 @@ export default {
         {
           text: 'Issues',
           align: 'left',
-          sortable: true,
-          value: 'name'
+          value: 'name',
+          sortable: false
         },
         {
           text: 'Key',
           value: 'key',
+          align: 'left',
+          sortable: false
+        },
+        {
+          text: 'Status',
+          value: 'name',
+          align: 'left',
+          sortable: false
+        },
+        {
+          text: 'Assignee',
+          value: 'displayName',
+          align: 'left',
+          sortable: false
+        },
+        {
+          text: 'Priority',
+          value: 'priority',
+          align: 'left',
+          sortable: false
+        },
+        {
+          text: 'Type',
+          value: 'name',
           align: 'left',
           sortable: false
         }

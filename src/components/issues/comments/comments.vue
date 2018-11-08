@@ -13,8 +13,10 @@
               <v-list-tile-content>
                 <v-list-tile-title v-html="item.author.displayName"></v-list-tile-title>
                 <v-list-tile-sub-title v-html="item.body"></v-list-tile-sub-title>
+                <v-list-tile-sub-title class="date" v-html="formatDate(item.created )"></v-list-tile-sub-title>
               </v-list-tile-content>
             </v-list-tile>
+            <v-divider ></v-divider>
           </div>
       </v-list>
       <v-container  grid-list-xs>
@@ -36,6 +38,7 @@
 </template>
 <script>
 import {HTTP} from '@/http-common.js'
+import moment from 'moment'
 
 export default {
   data () {
@@ -76,6 +79,7 @@ export default {
         this.notice = 'There are currently no comments'
       }
     },
+    
     postComment () {
       // Set the issue key in the comment form
       this.commentForm.key = this.selectedIssue.key
@@ -85,15 +89,21 @@ export default {
           console.log('Comment posted')
           this.commentForm.text = ''
           this.commentForm.key = ''
+          location.reload()
         })
         .catch(error => {
           console.log(error.response)
         })
+    },
+    formatDate (date) {
+        return moment(date).format('MMMM Do YYYY, h:mm:ss a')
     }
-  }
+  },
+  
 }
 </script>
 
-<style>
-
+<style lang="sass">
+.date
+  font-weight: 0.1em
 </style>

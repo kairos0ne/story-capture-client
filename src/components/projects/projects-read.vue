@@ -10,11 +10,14 @@
       <v-divider class="my-3"></v-divider>
       <v-data-table :headers="headers" :items="issues" hide-actions class="elevation-1">
         <template slot="items" slot-scope="props">
-          <td @click="gotoIssue(props.item)">{{ props.item.fields.summary }}</td>
+          <td @click="gotoIssue(props.item)"><img class="task-icon" :src="props.item.fields.issuetype.iconUrl" alt="">{{ props.item.fields.summary }}</td>
           <td>{{ props.item.key }}</td>
           <td>{{ props.item.fields.status.name }}</td>
           <td v-if="props.item.fields.assignee">
             <span class="chip-label"><v-chip class="subheading"> {{ props.item.fields.assignee.displayName }}</v-chip></span>
+          </td>
+          <td v-if="!props.item.fields.assignee">
+              <span class="chip-label"><v-chip class="subheading"> None</v-chip></span>
           </td>
           <td>
             <span class="chip-label"><v-chip class="subheading"> {{ props.item.fields.priority.name }}</v-chip></span>
@@ -151,4 +154,7 @@ export default {
   top: 50%
   left: 50%
   position: absolute
+.task-icon
+  margin-right: 15px
+  width: 20px
 </style>
